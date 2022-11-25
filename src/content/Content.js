@@ -4,6 +4,7 @@ import TodoList from "./TodoList";
 import Container from "./Container";
 import styles from './Content.module.css'
 import clsx from "clsx";
+import Button from "./Button";
 
 
 const tabs = [
@@ -13,50 +14,62 @@ const tabs = [
     {text: 'Created recently', filter: todo => (Date.now() - todo.created) < 1000 * 10}
 ]
 
+
 export default function ToDoApp() {
-    const [todos, setTodos] = useState(() => {
-        const items = localStorage.getItem("todos");
-        return items ? JSON.parse(items) : [];
-    });
-    const [name, setName] = useState("");
+    const [todos, setTodos] = useState([]);
+    const [values, setValues] = useState({name: '', desc: '', file: ''});
     const [error, setError] = useState('');
     const [tab, setTab] = useState(tabs[0]);
 
     useEffect(() => {
-        localStorage.setItem("todos", JSON.stringify(todos));
-    }, [todos]);
+        get('http://localhost:8080/todos')
+            .then(data => setTodos(data))
+    }, []);
 
     function handleFormSubmit(event) {
         event.preventDefault();
-        if (!name) {
+
+        const formData = new FormData();
+        formData.append('File', values.file);
+        formData.append('name', values.name);
+        formData.append('desc', values.desc);
+        if (!values.name) {
             setError("Please enter a name");
             return;
         }
-        setTodos([...todos, {
-            id: Math.random() + '',
-            name,
-            done: false,
-            created: Date.now(),
-            updated: null
-        }]);
-        setName("");
-        if (error) setError('')
+        postForm('http://localhost:8080/todos/create-with-file', formData)
+            .then(data => {
+                setTodos(data);
+                console.log(data)
+                setValues({name: '', desc: '', file: null})
+                if (error) setError('')
+            });
     }
 
-    function handleNameChange(event) {
-        setName(event.target.value);
+    function handleChange(data) {
+        setValues({...values, ...data});
     }
 
     const handleChangeBox = id => {
-        setTodos(todos.map(el => el.id === id ? {...el, done: !el.done, updated: Date.now()} : el));
+        post('http://localhost:8080/todos/complete', {id})
+            .then(data => {
+                setTodos(data);
+            });
     };
 
+
     function handleDeleteClick(id) {
-        setTodos(todos.filter(todo => todo.id !== id));
+        post('http://localhost:8080/todos/delete', {id})
+            .then(data => {
+                setTodos(data);
+            });
     }
 
     const handleDeleteCompleted = () => {
-        setTodos(todos.filter(todo => !todo.done));
+        post('http://localhost:8080/todos/clear-completed')
+            .then(data => {
+                setTodos(data);
+            });
     }
 
     const itemLeft = todos.filter(todo => !todo.done).length;
@@ -64,29 +77,28 @@ export default function ToDoApp() {
     return <>
         <div className={styles['to-do']}>
             <Container>
-                    <h1 className={styles.headline}>todos</h1>
-                    <div className={styles.content}>
-                        <TodoForm
-                            onFormSubmit={handleFormSubmit}
-                            onNameChange={handleNameChange}
-                            name={name}
-                            error={error}
-                        />
-                        {/*<div className={styles.tips}>{todos.length === 0 && <p>Add your first todo</p>}</div>*/}
-                        <TodoList
-                            todos={items.reverse()}
-                            onDeleteClick={handleDeleteClick}
-                            onCheckClick={handleChangeBox}
-                        />
-                    </div>
+                <h1 className={styles.headline}>todos</h1>
+                <div className={styles.content}>
+                    <TodoForm
+                        onFormSubmit={handleFormSubmit}
+                        onChange={handleChange}
+                        values={values}
+                        error={error}
+                    />
+                    {/*<div className={styles.tips}>{todos.length === 0 && <p>Add your first todo</p>}</div>*/}
+                    <TodoList
+                        todos={items}
+                        onDeleteClick={handleDeleteClick}
+                        onCheckClick={handleChangeBox}
+                    />
+                </div>
 
-                    <div className={styles.tabs}>
-                        <div className={styles.itemsLeft}>{itemLeft} {plural(itemLeft, 'item', 'items')} left</div>
-                        <Tabs  onChange={setTab} value={tab} items={tabs}/>
+                <div className={styles.tabs}>
+                    <div className={styles.itemsLeft}>{itemLeft} {plural(itemLeft, 'item', 'items')} left</div>
+                    <Tabs onChange={setTab} value={tab} items={tabs}/>
 
-                        <button className={styles.clear} onClick={handleDeleteCompleted}>Clear completed</button>
-                    </div>
-
+                    <button className={styles.clear} onClick={handleDeleteCompleted}>Clear completed</button>
+                </div>
 
 
             </Container>
@@ -102,9 +114,32 @@ function plural(num, single, multi) {
 const Tabs = (props) => {
     return <>
         {props.items.map(i => (
-            <button className={clsx(styles['tabs-button'], props.value === i && styles['tabs-button-active'])} key={i.text} onClick={() => props.onChange(i)}>{i.text}</button>
+            <button className={clsx(styles['tabs-button'], props.value === i && styles['tabs-button-active'])}
+                    key={i.text} onClick={() => props.onChange(i)}>{i.text}</button>
         ))}
     </>
+}
+
+function post(url, data = {}) {
+    return fetch(url, {
+        method: 'post',
+        body: JSON.stringify(data),
+        headers: {'content-type': 'application/json'}
+    })
+        .then(response => response.json())
+}
+
+function postForm(url, formData) {
+    return fetch(url, {
+        method: 'post',
+        body: formData,
+    })
+        .then(response => response.json())
+}
+
+function get(url) {
+    return fetch(url)
+        .then(response => response.json())
 }
 
 

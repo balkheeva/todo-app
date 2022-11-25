@@ -6,6 +6,7 @@
     text-align: center;
     font-weight: 200;
 }
+
 .to-do {
     background-color: var(--light-gray);
     min-height: 100vh;
@@ -19,6 +20,7 @@
     margin-bottom: 35px;
 
 }
+
 .tabs {
     padding-bottom: 40px;
     color: var(--gray);
@@ -34,9 +36,11 @@
     transition: opacity 180ms ease-out, transform 180ms ease-out;
     color: var(--gray);
 }
+
 .clear:hover {
     opacity: 0.8;
 }
+
 .tabs-button {
     background-color: transparent;
     border: none;
@@ -45,6 +49,7 @@
     padding: 10px 20px;
     border-radius: 3px;
 }
+
 .tabs-button-active {
     border: var(--light-beige) 1px solid;
 }
@@ -53,19 +58,19 @@
     display: inline-block;
     margin-right: 70px;
 }
-
-
+.btn {
+    display: block;
+    margin-right: auto;
+}
 @media only screen and (max-width: 490px) {
     .tabs-button, .itemsLeft {
         margin: 0 1vw;
     }
-    .tabs {
 
+    .tabs {
         overflow-x: scroll;
         display: flex;
         white-space: nowrap;
         align-items: center;
-
-
     }
 }
