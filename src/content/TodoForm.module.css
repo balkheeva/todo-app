@@ -11,27 +11,10 @@
     margin: 5px 0 15px 0px;
     font-style: italic;
 }
-.btn {
-    padding: 10px 20px;
-    cursor: pointer;
-    min-width: 100px;
-    border: 0;
-    border-radius: 3px;
-    font-size: 16px;
-    transition: opacity 180ms ease-out, transform 180ms ease-out;
-    background-color: transparent;
-    border: black 1px solid;
-}
-.btn:hover {
-    opacity: 0.8;
-}
-.btn:active {
-    transform: translate(1px, 1px);
-}
+
 
 form {
     background-color: var(--white);
-    padding: 20px;
     border-radius: 10px;
     display: flex;
     flex-direction: column;

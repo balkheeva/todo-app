@@ -4,73 +4,72 @@ import TodoList from "./TodoList";
 import Container from "./Container";
 import styles from './Content.module.css'
 import clsx from "clsx";
-import Button from "./Button";
+import {API_PATH} from "./constants";
 
 
 const tabs = [
     {text: 'All', filter: () => true},
     {text: 'Completed', filter: todo => todo.done},
     {text: 'Active', filter: todo => !todo.done},
-    {text: 'Created recently', filter: todo => (Date.now() - todo.created) < 1000 * 10}
+    {text: 'Created recently', filter: todo => (Date.now() - todo.created) < 1000 * 120}
 ]
-
 
 export default function ToDoApp() {
     const [todos, setTodos] = useState([]);
-    const [values, setValues] = useState({name: '', desc: '', file: ''});
     const [error, setError] = useState('');
     const [tab, setTab] = useState(tabs[0]);
 
+
     useEffect(() => {
-        get('http://localhost:8080/todos')
+        get(API_PATH + '/todos')
             .then(data => setTodos(data))
     }, []);
 
-    function handleFormSubmit(event) {
-        event.preventDefault();
-
+    function handleFormSubmit(values) {
         const formData = new FormData();
+        formData.append('id', values.id);
         formData.append('File', values.file);
         formData.append('name', values.name);
         formData.append('desc', values.desc);
+        formData.append('untilDate', values.untilDate);
         if (!values.name) {
             setError("Please enter a name");
             return;
         }
-        postForm('http://localhost:8080/todos/create-with-file', formData)
+        const url = values.id ? API_PATH + '/todos/edit' : API_PATH + '/todos/create-with-file'
+        return postForm(url, formData)
             .then(data => {
                 setTodos(data);
                 console.log(data)
-                setValues({name: '', desc: '', file: null})
                 if (error) setError('')
             });
     }
 
-    function handleChange(data) {
-        setValues({...values, ...data});
-    }
-
     const handleChangeBox = id => {
-        post('http://localhost:8080/todos/complete', {id})
+        post(API_PATH + '/todos/complete', {id})
             .then(data => {
                 setTodos(data);
             });
     };
 
+    const handleEdit = (id, values) => {
+        return handleFormSubmit({...values, id})
+    };
 
     function handleDeleteClick(id) {
-        post('http://localhost:8080/todos/delete', {id})
+        post(API_PATH + '/todos/delete', {id})
             .then(data => {
                 setTodos(data);
             });
     }
 
     const handleDeleteCompleted = () => {
-        post('http://localhost:8080/todos/clear-completed')
+        post(API_PATH + '/todos/clear-completed')
             .then(data => {
                 setTodos(data);
             });
     }
+
 
     const itemLeft = todos.filter(todo => !todo.done).length;
     const items = todos.filter(todo => tab.filter(todo))
@@ -81,23 +80,23 @@ export default function ToDoApp() {
                 <div className={styles.content}>
                     <TodoForm
                         onFormSubmit={handleFormSubmit}
-                        onChange={handleChange}
-                        values={values}
                         error={error}
                     />
-                    {/*<div className={styles.tips}>{todos.length === 0 && <p>Add your first todo</p>}</div>*/}
+                    {itemLeft ===0 && <p>You don't have any task here</p>}
                     <TodoList
                         todos={items}
-                        onDeleteClick={handleDeleteClick}
-                        onCheckClick={handleChangeBox}
+                        onDelete={handleDeleteClick}
+                        onComplete={handleChangeBox}
+                        onEdit={handleEdit}
                     />
+
                 </div>
 
                 <div className={styles.tabs}>
                     <div className={styles.itemsLeft}>{itemLeft} {plural(itemLeft, 'item', 'items')} left</div>
                     <Tabs onChange={setTab} value={tab} items={tabs}/>
 
-                    <button className={styles.clear} onClick={handleDeleteCompleted}>Clear completed</button>
+                    <button className={styles.clear} onClick={handleDeleteCompleted} type="button">Clear completed</button>
                 </div>
 
 

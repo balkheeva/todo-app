@@ -14,11 +14,10 @@
 
 .content {
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    padding-bottom: 5px;
     background-color: var(--white);
     border-radius: 10px;
     margin-bottom: 35px;
-
+    padding: 20px;
 }
 
 .tabs {
