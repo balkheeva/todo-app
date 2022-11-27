@@ -41,6 +41,7 @@ app.post('/todos/create-with-file', upload.single('File'), (req, res) => {
         desc: req.body.desc,
         untilDate: req.body.untilDate,
         fileName: req.file?.filename,
+        origName: req.file?.originalname,
         done: false,
         id: Math.random() + '',
         created: Date.now(),
@@ -57,7 +58,8 @@ app.post('/todos/edit', upload.single('File'), function (req, res) {
         name: req.body.name,
         desc: req.body.desc,
         untilDate: req.body.untilDate,
-        fileName: req.file?.filename || todo.fileName
+        fileName: req.file?.filename || todo.fileName,
+        origName: req.file?.originalname
     }) : todo)
     res.json(todos)
 })

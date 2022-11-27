@@ -33,7 +33,7 @@ export default function ToDoApp() {
         formData.append('desc', values.desc);
         formData.append('untilDate', values.untilDate);
         if (!values.name) {
-            setError("Please enter a name");
+            setError("Please enter a title");
             return;
         }
         const url = values.id ? API_PATH + '/todos/edit' : API_PATH + '/todos/create-with-file'
@@ -82,20 +82,18 @@ export default function ToDoApp() {
                         onFormSubmit={handleFormSubmit}
                         error={error}
                     />
-                    {itemLeft ===0 && <p>You don't have any task here</p>}
+                    {todos.length === 0 ? <p>You don't have any task here</p> : null}
                     <TodoList
                         todos={items}
                         onDelete={handleDeleteClick}
                         onComplete={handleChangeBox}
                         onEdit={handleEdit}
                     />
-
                 </div>
 
                 <div className={styles.tabs}>
                     <div className={styles.itemsLeft}>{itemLeft} {plural(itemLeft, 'item', 'items')} left</div>
                     <Tabs onChange={setTab} value={tab} items={tabs}/>
-
                     <button className={styles.clear} onClick={handleDeleteCompleted} type="button">Clear completed</button>
                 </div>
 

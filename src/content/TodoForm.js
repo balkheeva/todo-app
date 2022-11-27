@@ -1,8 +1,10 @@
 import {useCallback, useState} from "react";
 import clsx from "clsx";
-import styles from './TodoForm.module.css'
+import styles from './TodoForm.module.scss'
+import Button from "./Button";
+import attach from '../images/attachments-attach-svgrepo-com.svg'
 
-const initialValues = {name: '', desc: '', file: '', untilDate: ''}
+const initialValues = {name: '', desc: '', file: '', untilDate: '', origName: ''}
 
 export default function TodoForm(props) {
     const [values, setValues] = useState(props.initialValues || initialValues);
@@ -17,7 +19,7 @@ export default function TodoForm(props) {
 
     return <>
         <form onKeyPress={handleEnter}>
-            <label htmlFor='name'>Add title</label>
+            <label className={styles.labelText} htmlFor='name'>Add title</label>
             <Input
                 placeholder="Add title"
                 name="name"
@@ -39,23 +41,24 @@ export default function TodoForm(props) {
                 values={values}
                 onChange={handleChange}
             />
-            <label htmlFor='file'>Choose a file:</label>
-            <input
-                type="file"
-                id="file"
-                name="file"
-                onChange={e => handleChange({file: e.target.files[0]})}
-            />
+                <label className={styles.inputFile}>
+                    <span className={styles.inputFile__text} type="text">{values.origName}</span>
+                    <input
+                        type="file"
+                        id="file"
+                        name="file"
+                        onChange={e => handleChange({file: e.target.files[0], origName: e.target.files[0].name})}
+                    />
+                    <span className={styles.inputFile__btn}><img src={attach}/>Choose a file</span>
+                </label>
 
-
-            <button onClick={handleSubmit} type="button">Add</button>
+            <Button onClick={handleSubmit} className={styles.floatRight} type="button">Add</Button>
         </form>
     </>
 }
 
 function Input(props) {
     const {onChange, name, values, type} = props;
-
     const handleChange = useCallback(e => {
         onChange({[name]: e.target.value})
     }, [name, onChange]);

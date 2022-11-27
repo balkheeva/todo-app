@@ -1,0 +1,90 @@
+.placeholderError::placeholder {
+  color: red;
+}
+
+.textfield {
+  width: 100%;
+  padding: 12px;
+  border-radius: 2px;
+  border: 1px solid var(--light-gray);
+  font-size: 16px;
+  transition: opacity 200ms ease-out;
+  margin: 5px 0 15px 0px;
+  font-style: italic;
+}
+
+.labelText {
+  font-size: 16px;
+}
+
+form {
+  background-color: var(--white);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  color: var(--black);
+}
+
+.inputFile {
+  position: relative;
+  display: inline-block;
+
+  &__text {
+    padding: 0 10px;
+    line-height: 40px;
+    text-align: left;
+    height: 40px;
+    display: block;
+    float: left;
+    box-sizing: border-box;
+    min-width: 200px;
+    max-width: 100%;
+    border-radius: 6px 0px 0 6px;
+    border: 1px solid var(--light-gray);
+  }
+
+  &__btn {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    outline: none;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    vertical-align: middle;
+    color: var(--black);
+    text-align: center;
+    border-radius: 0 4px 4px 0;
+    background-color: #fff;
+    line-height: 22px;
+    height: 40px;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    border: none;
+    margin: 0;
+    transition: background-color 0.2s;
+    img {
+      width: 18px;
+      opacity: 0.5;
+      margin-right: 10px;
+
+    }
+
+  }
+
+  input[type=file] {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+    display: block;
+    width: 0;
+    height: 0;
+
+    &:focus + .btn {
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, .25);
+    }
+  }
+}
+
+.floatRight {
+  float: right;
+}

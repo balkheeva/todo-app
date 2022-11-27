@@ -5,6 +5,8 @@
 .btn img {
     width: 18px;
     opacity: 0.5;
+    margin-left: 20px;
+
 }
 
 .todo-list {
@@ -71,8 +73,8 @@
     opacity: 1;
 }
 .dateCreated {
-    margin-right: 20px;
     color: var(--gray);
+    margin-left: 20px;
 
 }
 

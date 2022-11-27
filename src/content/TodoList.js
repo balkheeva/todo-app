@@ -6,6 +6,7 @@ import TodoForm from "./TodoForm";
 import Modal from "./Modal";
 import styles from './TodoList.module.css'
 import Button from "./Button";
+import IconEdit from "./IconEdit";
 
 
 export default function TodoList(props) {
@@ -35,11 +36,15 @@ function ListItem(props) {
                 <input type="checkbox" onChange={props.onComplete} checked={todo.done}/>
             </div>
             <Todos details={todo}/>
-            {todo.fileName && <a href={`${API_PATH}/todos/files/${todo.id}`} target="_blank">Your File</a>}
-            <Button onClick={() => setModalOpen(!modalOpen)}>Edit</Button>
-            <p className={styles.dateCreated}>{new Date(todo.created).toLocaleString([], {hour: '2-digit', minute:'2-digit'})}</p>
-            <p className={styles.dateCreated}>{todo.untilDate}</p>
-            <Button onClick={props.onDelete}><IconDelete /></Button>
+            {todo.fileName && <a href={`${API_PATH}/todos/files/${todo.id}`} target="_blank">{todo.origName}</a>}
+            <button className={styles.btn} onClick={() => setModalOpen(!modalOpen)}><IconEdit/></button>
+            <span className={styles.dateCreated}>{new Date(todo.created).toLocaleString([], {hour: '2-digit', minute:'2-digit'})}</span>
+            {todo.updated && <span className={styles.dateCreated}>{new Date(todo.updated).toLocaleString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            })}</span>}
+            {todo.untilDate && <span className={styles.dateCreated}>{todo.untilDate}</span>}
+            <button className={styles.btn} onClick={props.onDelete}><IconDelete /></button>
             {modalOpen && (
                 <Modal>
                     <TodoForm onFormSubmit={handleEdit} initialValues={todo} />

@@ -9,8 +9,12 @@
 }
 
 .primary {
-  background-color: blue;
+  background-color: var(--light-beige);
+  padding: 10px 20px;
   color: #fff;
+  font-weight: 800;
+  font-size: 14px;
+  border-radius: 5px;
 }
 
 .secondary {
