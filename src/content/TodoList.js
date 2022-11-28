@@ -4,14 +4,27 @@ import IconDelete from "./IconDelete";
 import {API_PATH} from './constants'
 import TodoForm from "./TodoForm";
 import Modal from "./Modal";
-import styles from './TodoList.module.css'
-import Button from "./Button";
+import styles from './TodoList.module.scss'
 import IconEdit from "./IconEdit";
+import IconDeadline from "./IconDeadline"
+import attach from '../images/attachments-attach-svgrepo-com.svg'
+import clsx from "clsx";
+import dayjs from 'dayjs'
+import calendar from 'dayjs/plugin/calendar'
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
+import isToday from 'dayjs/plugin/isToday'
+import isTomorrow from 'dayjs/plugin/isTomorrow'
 
+dayjs.extend(calendar)
+dayjs.extend(isSameOrBefore)
+dayjs.extend(isToday)
+dayjs.extend(isTomorrow)
+
+let now = dayjs()
 
 export default function TodoList(props) {
     return (
-        <ul className={styles['todo-list']}>
+        <ul className={styles.todoList}>
             {props.todos.map(todo => (
                 <li key={todo.id}>
                     <ListItem
@@ -36,17 +49,12 @@ function ListItem(props) {
                 <input type="checkbox" onChange={props.onComplete} checked={todo.done}/>
             </div>
             <Todos details={todo}/>
-            {todo.fileName && <a href={`${API_PATH}/todos/files/${todo.id}`} target="_blank">{todo.origName}</a>}
-            <button className={styles.btn} onClick={() => setModalOpen(!modalOpen)}><IconEdit/></button>
-            <span className={styles.dateCreated}>{new Date(todo.created).toLocaleString([], {hour: '2-digit', minute:'2-digit'})}</span>
-            {todo.updated && <span className={styles.dateCreated}>{new Date(todo.updated).toLocaleString([], {
-                hour: '2-digit',
-                minute: '2-digit'
-            })}</span>}
-            {todo.untilDate && <span className={styles.dateCreated}>{todo.untilDate}</span>}
-            <button className={styles.btn} onClick={props.onDelete}><IconDelete /></button>
+            <button className={clsx(styles.btn, styles.todoItem__editIcon)} title="Edit todo" type="button" onClick={() => setModalOpen(!modalOpen)}><IconEdit className={styles.todoItem__icon}/></button>
+            {todo.fileName && <a className={styles.todoItem__fileName} title="Open file in a new tab" href={`${API_PATH}/todos/files/${todo.id}`} target="_blank" rel="noreferrer"><img className={styles.todoItem__icon} src={attach}/>{todo.origName}</a>}
+            <UntilDate todo={todo}/>
+            <button title="Delete todo" type="button" className={clsx(styles.todoItem__deleteIcon, styles.btn)} onClick={props.onDelete}><IconDelete className={styles.todoItem__icon}/></button>
             {modalOpen && (
-                <Modal>
+                <Modal onClose={() => setModalOpen(false)}>
                     <TodoForm onFormSubmit={handleEdit} initialValues={todo} />
                 </Modal>
             )}
@@ -54,3 +62,24 @@ function ListItem(props) {
     )
 }
 
+const UntilDate = (props) => {
+    const {todo} = props
+    let className = ''
+    let text = ''
+    let date = dayjs(todo.untilDate)
+    if (todo.done) {
+        date = dayjs(todo.completed)
+        className = styles.untilDate__dateCompleted
+        text = 'Completed '
+    } else if (date.isSameOrBefore(now) && todo.untilDate) {
+        className = styles.untilDate__expired
+        text = 'Expired '
+    } else if (!date.isSameOrBefore(now) && todo.untilDate) {
+        text = 'Expires ' + (date.isToday() || date.isTomorrow() ? '' : 'on ')
+    } else return null
+    return (
+        <div className={clsx(styles.untilDate, className)}>
+            <IconDeadline className={styles.todoItem__icon} />{text}{date.calendar().toLowerCase()}
+        </div>
+    )
+}

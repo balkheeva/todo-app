@@ -22,18 +22,12 @@
 
 .tabs {
     padding-bottom: 40px;
-    color: var(--gray);
+    color: var(--black);
     font-size: 13px;
 }
 
 .clear {
     float: right;
-    border: var(--light-beige) 1px solid;
-    background-color: transparent;
-    padding: 10px 20px;
-    border-radius: 3px;
-    transition: opacity 180ms ease-out, transform 180ms ease-out;
-    color: var(--gray);
 }
 
 .clear:hover {
@@ -43,10 +37,10 @@
 .tabs-button {
     background-color: transparent;
     border: none;
-    margin-right: 30px;
-    color: var(--gray);
+    color: var(--black);
     padding: 10px 20px;
     border-radius: 3px;
+    cursor: pointer;
 }
 
 .tabs-button-active {
@@ -55,13 +49,13 @@
 
 .itemsLeft {
     display: inline-block;
-    margin-right: 70px;
+    margin-right: 5vw;
 }
 .btn {
     display: block;
     margin-right: auto;
 }
-@media only screen and (max-width: 490px) {
+@media only screen and (max-width: 1377px) {
     .tabs-button, .itemsLeft {
         margin: 0 1vw;
     }

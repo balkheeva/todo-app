@@ -37,7 +37,7 @@ export default function TodoForm(props) {
             <label htmlFor="untilDate">End date:</label>
             <Input
                 name="untilDate"
-                type="date"
+                type="datetime-local"
                 values={values}
                 onChange={handleChange}
             />
@@ -52,7 +52,7 @@ export default function TodoForm(props) {
                     <span className={styles.inputFile__btn}><img src={attach}/>Choose a file</span>
                 </label>
 
-            <Button onClick={handleSubmit} className={styles.floatRight} type="button">Add</Button>
+            <Button onClick={handleSubmit} className={styles.btnLocation} type="button">Add</Button>
         </form>
     </>
 }

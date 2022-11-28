@@ -30,12 +30,10 @@ app.get('/', function (req, res) {
 let todos = []
 
 app.get('/todos', function (req, res) {
-    console.log(JSON.stringify(todos))
     res.json(todos)
 })
 
 app.post('/todos/create-with-file', upload.single('File'), (req, res) => {
-    console.log('create request: ', req.file, req.body)
     todos = [{
         name: req.body.name,
         desc: req.body.desc,
@@ -45,45 +43,47 @@ app.post('/todos/create-with-file', upload.single('File'), (req, res) => {
         done: false,
         id: Math.random() + '',
         created: Date.now(),
-        updated: null
+        updated: null,
+        completed: null
     }, ...todos]
     res.json(todos)
 });
 
 
 app.post('/todos/edit', upload.single('File'), function (req, res) {
-    console.log('edit request: ', req.body)
     todos = todos.map(todo => todo.id === req.body.id ? ({
         ...todo,
         name: req.body.name,
         desc: req.body.desc,
         untilDate: req.body.untilDate,
         fileName: req.file?.filename || todo.fileName,
-        origName: req.file?.originalname
+        origName: req.file?.originalname,
+        updated: new Date().toISOString(),
     }) : todo)
     res.json(todos)
 })
 
 app.get('/todos/files/:id', function (req, res) {
     const todo = todos.find(t => t.id === req.params.id);
-    console.log(1111, todo)
     res.sendFile(path.resolve(__dirname, '../uploads/') + '/' + todo.fileName)
 })
 
 app.post('/todos/complete', function (req, res) {
-    console.log('complete request: ', req.body)
-    todos = todos.map(todo => todo.id === req.body.id ? ({...todo, done: !todo.done, updated: Date.now()}) : todo)
+    todos = todos.map(todo => todo.id === req.body.id ? ({
+        ...todo,
+        done: !todo.done,
+        completed: !todo.done ? new Date().toISOString() : null,
+        updated: new Date().toISOString(),
+    }) : todo)
     res.json(todos)
 })
 
 app.post('/todos/delete', function (req, res) {
-    console.log('delete request: ', req.body)
     todos = todos.filter(todo => todo.id !== req.body.id)
     res.json(todos)
 })
 
 app.post('/todos/clear-completed', function (req, res) {
-    console.log('clear completed request: ', req.body)
     todos = todos.filter(todo => !todo.done)
     res.json(todos)
 })

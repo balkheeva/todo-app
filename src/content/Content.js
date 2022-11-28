@@ -5,6 +5,7 @@ import Container from "./Container";
 import styles from './Content.module.css'
 import clsx from "clsx";
 import {API_PATH} from "./constants";
+import Button from "./Button";
 
 
 const tabs = [
@@ -83,21 +84,18 @@ export default function ToDoApp() {
                         error={error}
                     />
                     {todos.length === 0 ? <p>You don't have any task here</p> : null}
-                    <TodoList
-                        todos={items}
-                        onDelete={handleDeleteClick}
-                        onComplete={handleChangeBox}
-                        onEdit={handleEdit}
-                    />
                 </div>
-
+                <TodoList
+                    todos={items}
+                    onDelete={handleDeleteClick}
+                    onComplete={handleChangeBox}
+                    onEdit={handleEdit}
+                />
                 <div className={styles.tabs}>
                     <div className={styles.itemsLeft}>{itemLeft} {plural(itemLeft, 'item', 'items')} left</div>
                     <Tabs onChange={setTab} value={tab} items={tabs}/>
-                    <button className={styles.clear} onClick={handleDeleteCompleted} type="button">Clear completed</button>
+                    <Button className={styles.clear} onClick={handleDeleteCompleted}>Clear completed</Button>
                 </div>
-
-
             </Container>
         </div>
 
