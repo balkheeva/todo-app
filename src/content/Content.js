@@ -46,6 +46,7 @@ export default function ToDoApp() {
             });
     }
 
+
     const handleChangeBox = id => {
         post(API_PATH + '/todos/complete', {id})
             .then(data => {
@@ -94,7 +95,7 @@ export default function ToDoApp() {
                 <div className={styles.tabs}>
                     <div className={styles.itemsLeft}>{itemLeft} {plural(itemLeft, 'item', 'items')} left</div>
                     <Tabs onChange={setTab} value={tab} items={tabs}/>
-                    <Button className={styles.clear} onClick={handleDeleteCompleted}>Clear completed</Button>
+                    <Button className={styles.clear} onClick={handleDeleteCompleted} disabled={itemLeft === todos.length}>Clear completed</Button>
                 </div>
             </Container>
         </div>

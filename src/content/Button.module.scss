@@ -7,7 +7,23 @@
     width: 18px;
     opacity: 0.5;
   }
+
+  &[disabled] {
+    opacity: 0.5;
+    cursor: default;
+
+    &:hover {
+      opacity: 0.5;
+      transform: none;
+    }
+  }
+
+  &:hover, &:active {
+    opacity: 0.8;
+    transform: translate(1px, 1px);
+  }
 }
+
 
 .primary {
   background-color: var(--light-beige);
@@ -23,9 +39,3 @@
   color: #777;
 }
 
-.root:hover {
-  opacity: 0.8;
-}
-.root:active {
-  transform: translate(1px, 1px);
-}

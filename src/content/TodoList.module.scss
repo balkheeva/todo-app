@@ -59,16 +59,17 @@
     color: var(--black);
     cursor: pointer;
     font-size: 14px;
-    display: block;
     width: 200px;
     word-break: break-all;
     flex-basis: 100%;
     white-space: nowrap;
     margin: 10px 0;
     overflow: hidden;
+    display: flex;
 
     > img {
       margin-right: 4px;
+      width: 14px;
     }
 
   }
@@ -152,18 +153,26 @@
 
   > svg {
     margin-right: 4px;
+    width: 14px;
   }
 
   &__expired {
     fill: red;
     stroke: red;
     color: red;
+    > svg {
+      opacity: 1;
+    }
   }
 
   &__dateCompleted {
     fill: green;
     stroke: green;
     color: green;
+    > svg {
+      opacity: 1;
+    }
+
   }
 }
 
