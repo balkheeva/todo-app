@@ -38,7 +38,6 @@ export default function TodoList(props) {
         </ul>
     )
 }
-
 function ListItem(props) {
     const [modalOpen, setModalOpen] = useState(false)
     const {todo} = props
@@ -49,13 +48,35 @@ function ListItem(props) {
                 <input type="checkbox" onChange={props.onComplete} checked={todo.done}/>
             </div>
             <Todos details={todo}/>
-            <button className={clsx(styles.btn, styles.todoItem__editIcon)} title="Edit todo" type="button" onClick={() => setModalOpen(!modalOpen)}><IconEdit className={styles.todoItem__icon}/></button>
-            {todo.fileName && <a className={styles.todoItem__fileName} title="Open file in a new tab" href={`${API_PATH}/todos/files/${todo.id}`} target="_blank" rel="noreferrer"><img className={styles.todoItem__icon} src={attach}/>{todo.origName}</a>}
+            <button
+                className={clsx(styles.btn, styles.todoItem__editIcon)}
+                title="Edit todo"
+                type="button"
+                onClick={() => setModalOpen(!modalOpen)}><IconEdit className={styles.todoItem__icon}/>
+            </button>
+            {todo.fileName &&
+             <a
+                className={styles.todoItem__fileName}
+                title="Open file in a new tab"
+                href={`${API_PATH}/todos/files/${todo.id}`}
+                target="_blank"
+                rel="noreferrer">
+                <img className={styles.todoItem__icon} src={attach}/>{todo.origName}
+            </a>}
             <UntilDate todo={todo}/>
-            <button title="Delete todo" type="button" className={clsx(styles.todoItem__deleteIcon, styles.btn)} onClick={props.onDelete}><IconDelete className={styles.todoItem__icon}/></button>
+            <button
+                title="Delete todo"
+                type="button"
+                className={clsx(styles.todoItem__deleteIcon, styles.btn)}
+                onClick={props.onDelete}>
+                <IconDelete className={styles.todoItem__icon}/>
+            </button>
             {modalOpen && (
                 <Modal onClose={() => setModalOpen(false)}>
-                    <TodoForm onFormSubmit={handleEdit} initialValues={todo} />
+                    <TodoForm
+                        onFormSubmit={handleEdit}
+                        initialValues={todo}
+                    />
                 </Modal>
             )}
         </>
@@ -79,7 +100,7 @@ const UntilDate = (props) => {
     } else return null
     return (
         <div className={clsx(styles.untilDate, className)}>
-            <IconDeadline className={styles.todoItem__icon} />{text}{date.calendar().toLowerCase()}
+            <IconDeadline className={styles.todoItem__icon}/>{text}{date.calendar().toLowerCase()}
         </div>
     )
 }

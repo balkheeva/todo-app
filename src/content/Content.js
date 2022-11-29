@@ -7,7 +7,6 @@ import clsx from "clsx";
 import {API_PATH} from "./constants";
 import Button from "../Button/Button";
 
-
 const tabs = [
     {text: 'All', filter: () => true},
     {text: 'Completed', filter: todo => todo.done},
@@ -44,21 +43,25 @@ export default function ToDoApp() {
                 if (error) setError('')
             });
     }
+
     const handleChangeBox = id => {
         post(API_PATH + '/todos/complete', {id})
             .then(data => {
                 setTodos(data);
             });
     };
+
     const handleEdit = (id, values) => {
         return handleFormSubmit({...values, id})
     };
+
     const handleDeleteClick = (id) => {
         post(API_PATH + '/todos/delete', {id})
             .then(data => {
                 setTodos(data);
             });
     }
+
     const handleDeleteCompleted = () => {
         post(API_PATH + '/todos/clear-completed')
             .then(data => {
@@ -102,6 +105,7 @@ export default function ToDoApp() {
     )
 
 }
+
 
 function plural(num, single, multi) {
     return num === 1 ? single : multi
