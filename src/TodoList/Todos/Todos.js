@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import styles from './TodoList.module.scss'
+import styles from '../TodoList.module.scss'
 
 export default function Todos(props){
     const {details} = props;

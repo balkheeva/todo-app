@@ -1,0 +1,77 @@
+.toDo {
+  background-color: var(--light-gray);
+  min-height: 100vh;
+
+  &__headline {
+    font-size: 100px;
+    margin: 0;
+    padding: 5vh 0 5vh 0;
+    color: var(--light-beige);
+    text-align: center;
+    font-weight: 200;
+  }
+
+  &__description {
+    color: var(--black);
+    font-weight: 400;
+    font-size: 16px;
+  }
+
+  &__content {
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    background-color: var(--white);
+    border-radius: 10px;
+    margin-bottom: 35px;
+    padding: 20px;
+  }
+
+  &__tabs {
+    padding-bottom: 40px;
+    color: var(--black);
+    font-size: 13px;
+
+    &__button {
+      background-color: transparent;
+      border: none;
+      color: var(--black);
+      padding: 10px 20px;
+      border-radius: 3px;
+      cursor: pointer;
+
+      &__active {
+        border: var(--light-beige) 1px solid;
+      }
+    }
+  }
+
+  &__clear {
+    float: right;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  &__itemsLeft {
+    display: inline-block;
+    margin-right: 5vw;
+  }
+}
+
+.btn {
+  display: block;
+  margin-right: auto;
+}
+
+@media only screen and (max-width: 1377px) {
+  .toDo__tabs, .toDo__itemsLeft {
+    margin: 0 1vw;
+  }
+
+  .toDo__tabs {
+    overflow-x: scroll;
+    display: flex;
+    white-space: nowrap;
+    align-items: center;
+  }
+}

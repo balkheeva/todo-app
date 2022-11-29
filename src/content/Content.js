@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from "react";
-import TodoForm from './TodoForm'
-import TodoList from "./TodoList";
+import TodoForm from '../TodoForm/TodoForm'
+import TodoList from "../TodoList/TodoList";
 import Container from "./Container";
-import styles from './Content.module.css'
+import styles from './Content.module.scss'
 import clsx from "clsx";
 import {API_PATH} from "./constants";
-import Button from "./Button";
+import Button from "../Button/Button";
 
 
 const tabs = [
@@ -20,13 +20,12 @@ export default function ToDoApp() {
     const [error, setError] = useState('');
     const [tab, setTab] = useState(tabs[0]);
 
-
     useEffect(() => {
         get(API_PATH + '/todos')
             .then(data => setTodos(data))
     }, []);
 
-    function handleFormSubmit(values) {
+    const handleFormSubmit = (values) => {
         const formData = new FormData();
         formData.append('id', values.id);
         formData.append('File', values.file);
@@ -45,46 +44,40 @@ export default function ToDoApp() {
                 if (error) setError('')
             });
     }
-
-
     const handleChangeBox = id => {
         post(API_PATH + '/todos/complete', {id})
             .then(data => {
                 setTodos(data);
             });
     };
-
     const handleEdit = (id, values) => {
         return handleFormSubmit({...values, id})
     };
-
-    function handleDeleteClick(id) {
+    const handleDeleteClick = (id) => {
         post(API_PATH + '/todos/delete', {id})
             .then(data => {
                 setTodos(data);
             });
     }
-
     const handleDeleteCompleted = () => {
         post(API_PATH + '/todos/clear-completed')
             .then(data => {
                 setTodos(data);
             });
     }
-
-
     const itemLeft = todos.filter(todo => !todo.done).length;
     const items = todos.filter(todo => tab.filter(todo))
-    return <>
-        <div className={styles['to-do']}>
+    return (
+        <div className={styles.toDo}>
             <Container>
-                <h1 className={styles.headline}>todos</h1>
-                <div className={styles.content}>
+                <h1 className={styles.toDo__headline}>todos</h1>
+                <div className={styles.toDo__content}>
                     <TodoForm
                         onFormSubmit={handleFormSubmit}
                         error={error}
                     />
-                    {todos.length === 0 ? <p>You don't have any task here</p> : null}
+                    {todos.length === 0 ?
+                        <p className={styles.toDo__description}>You don't have any tasks here</p> : null}
                 </div>
                 <TodoList
                     todos={items}
@@ -92,15 +85,22 @@ export default function ToDoApp() {
                     onComplete={handleChangeBox}
                     onEdit={handleEdit}
                 />
-                <div className={styles.tabs}>
-                    <div className={styles.itemsLeft}>{itemLeft} {plural(itemLeft, 'item', 'items')} left</div>
-                    <Tabs onChange={setTab} value={tab} items={tabs}/>
-                    <Button className={styles.clear} onClick={handleDeleteCompleted} disabled={itemLeft === todos.length}>Clear completed</Button>
+                <div className={styles.toDo__tabs}>
+                    <div className={styles.toDo__itemsLeft}>{itemLeft} {plural(itemLeft, 'item', 'items')} left</div>
+                    <Tabs
+                        onChange={setTab}
+                        value={tab}
+                        items={tabs}
+                    />
+                    <Button className={styles.toDo__clear}
+                            onClick={handleDeleteCompleted}
+                            disabled={itemLeft === todos.length}>Clear completed
+                    </Button>
                 </div>
             </Container>
         </div>
+    )
 
-    </>
 }
 
 function plural(num, single, multi) {
@@ -110,7 +110,7 @@ function plural(num, single, multi) {
 const Tabs = (props) => {
     return <>
         {props.items.map(i => (
-            <button className={clsx(styles['tabs-button'], props.value === i && styles['tabs-button-active'])}
+            <button className={clsx(styles.toDo__tabs__button, props.value === i && styles.toDo__tabs__button__active)}
                     key={i.text} onClick={() => props.onChange(i)}>{i.text}</button>
         ))}
     </>
