@@ -1,11 +1,14 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useMemo} from "react";
 import TodoForm from '../TodoForm/TodoForm'
 import TodoList from "../TodoList/TodoList";
 import Container from "./Container";
 import styles from './Content.module.scss'
 import clsx from "clsx";
-import {API_PATH} from "./constants";
 import Button from "../Button/Button";
+import {db} from "../firebase.js"
+import {collection, writeBatch, addDoc, doc, deleteDoc, onSnapshot, updateDoc, query, where} from "firebase/firestore";
+
+
 
 const tabs = [
     {text: 'All', filter: () => true},
@@ -18,55 +21,63 @@ export default function ToDoApp() {
     const [todos, setTodos] = useState([]);
     const [error, setError] = useState('');
     const [tab, setTab] = useState(tabs[0]);
+    const userId = useMemo(() => (
+        new URLSearchParams(window.location.search).get('userId') || Math.random().toString().substring(2)
+    ), [])
 
     useEffect(() => {
-        get(API_PATH + '/todos')
-            .then(data => setTodos(data))
+        onSnapshot(query(collection(db, "todos"), where('userId', '==', userId)), rawDocs => {
+            const docs = rawDocs.docs
+                .map((doc) => ({ ...doc.data(), id: doc.id }));
+            docs.sort((a, b) => b.created - a.created);
+            setTodos(docs);
+        })
     }, []);
 
-    const handleFormSubmit = (values) => {
-        const formData = new FormData();
-        formData.append('id', values.id);
-        formData.append('File', values.file);
-        formData.append('name', values.name);
-        formData.append('desc', values.desc);
-        formData.append('untilDate', values.untilDate);
+    function handleFormSubmit(values) {
         if (!values.name) {
             setError("Please enter a title");
             return;
         }
-        const url = values.id ? API_PATH + '/todos/edit' : API_PATH + '/todos/create-with-file'
-        return postForm(url, formData)
-            .then(data => {
-                setTodos(data);
-                console.log(data)
-                if (error) setError('')
-            });
+        return addDoc(collection(db, "todos"), {
+            name: values.name,
+            userId,
+            desc: values.desc,
+            untilDate: values.untilDate,
+            done: false,
+            created: Date.now(),
+            updated: null,
+            completed: null
+        }).then(() => {
+            if (new URLSearchParams(window.location.search).has('userId')) return;
+            window.history.pushState({}, '', '?userId=' + userId)
+        });
     }
 
     const handleChangeBox = id => {
-        post(API_PATH + '/todos/complete', {id})
-            .then(data => {
-                setTodos(data);
-            });
+        const found = todos.find(i => i.id === id)
+        return handleEdit(id, { done: !found.done })
     };
+
+    const handleDelete = (id) => {
+        const reference = doc(db, 'todos', id)
+        return deleteDoc(reference)
+    }
 
     const handleEdit = (id, values) => {
-        return handleFormSubmit({...values, id})
-    };
-
-    const handleDeleteClick = (id) => {
-        post(API_PATH + '/todos/delete', {id})
-            .then(data => {
-                setTodos(data);
-            });
+        const reference = doc(db, 'todos', id)
+        return updateDoc(reference, values)
     }
 
     const handleDeleteCompleted = () => {
-        post(API_PATH + '/todos/clear-completed')
-            .then(data => {
-                setTodos(data);
-            });
+        const batch = writeBatch(db)
+        todos
+            .filter(todo => todo.done)
+            .forEach(todo => {
+                const reference = doc(db, 'todos', todo.id)
+                batch.delete(reference)
+            })
+        return batch.commit()
     }
     const itemLeft = todos.filter(todo => !todo.done).length;
     const items = todos.filter(todo => tab.filter(todo))
@@ -84,7 +95,7 @@ export default function ToDoApp() {
                 </div>
                 <TodoList
                     todos={items}
-                    onDelete={handleDeleteClick}
+                    onDelete={handleDelete}
                     onComplete={handleChangeBox}
                     onEdit={handleEdit}
                 />
@@ -120,26 +131,7 @@ const Tabs = (props) => {
     </>
 }
 
-function post(url, data = {}) {
-    return fetch(url, {
-        method: 'post',
-        body: JSON.stringify(data),
-        headers: {'content-type': 'application/json'}
-    })
-        .then(response => response.json())
-}
 
-function postForm(url, formData) {
-    return fetch(url, {
-        method: 'post',
-        body: formData,
-    })
-        .then(response => response.json())
-}
 
-function get(url) {
-    return fetch(url)
-        .then(response => response.json())
-}
 
 
