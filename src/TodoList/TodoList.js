@@ -38,6 +38,7 @@ export default function TodoList(props) {
         </ul>
     )
 }
+
 function ListItem(props) {
     const [modalOpen, setModalOpen] = useState(false)
     const {todo} = props
@@ -55,15 +56,16 @@ function ListItem(props) {
                 onClick={() => setModalOpen(!modalOpen)}><IconEdit className={styles.todoItem__icon}/>
             </button>
             {todo.fileName &&
-             <a
-                className={styles.todoItem__fileName}
-                title="Open file in a new tab"
-                href={`${API_PATH}/todos/files/${todo.id}`}
-                target="_blank"
-                rel="noreferrer">
-                <img className={styles.todoItem__icon} src={attach}/>{todo.origName}
-            </a>}
+                <a
+                    className={styles.todoItem__fileName}
+                    title="Open file in a new tab"
+                    href={`${API_PATH}/todos/files/${todo.id}`}
+                    target="_blank"
+                    rel="noreferrer">
+                    <img className={styles.todoItem__icon} src={attach}/>{todo.origName}
+                </a>}
             <UntilDate todo={todo}/>
+
             <button
                 title="Delete todo"
                 type="button"

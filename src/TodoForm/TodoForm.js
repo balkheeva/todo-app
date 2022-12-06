@@ -4,7 +4,7 @@ import styles from './TodoForm.module.scss'
 import Button from "../Button/Button";
 import attach from '../images/attachments-attach-svgrepo-com.svg'
 
-const initialValues = {name: '', desc: '', file: '', untilDate: '', origName: ''}
+const initialValues = {name: '', desc: '', file: '', untilDate: ''}
 
 export default function TodoForm(props) {
     const [values, setValues] = useState(props.initialValues || initialValues);
@@ -40,16 +40,7 @@ export default function TodoForm(props) {
                 values={values}
                 onChange={handleChange}
             />
-            <label className={styles.todoForm__inputFile}>
-                <span className={styles.todoForm__inputFile__text} type="text">{values.origName}</span>
-                <input
-                    type="file"
-                    id="file"
-                    name="file"
-                    onChange={e => handleChange({file: e.target.files[0], origName: e.target.files[0].name})}
-                />
-                <span className={styles.todoForm__inputFile__btn}><img src={attach}/>Choose a file</span>
-            </label>
+
             <Button onClick={handleSubmit} className={styles.btnLocation} type="button">Add</Button>
         </form>
     )

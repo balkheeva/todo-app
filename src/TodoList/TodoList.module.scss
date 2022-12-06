@@ -7,45 +7,44 @@
 
 .todoList {
   padding-left: 0;
-  margin-top: 0;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  gap: 20px;
   color: var(--gray);
+  margin-bottom: 40px;
+  @media screen and (min-width: 1592px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  @media screen and (min-width: 700px) and (max-width: 1591px) {
+    grid-template-columns: 1fr 1fr;
+  }
+  @media screen and (max-width: 699px) {
+    grid-template-columns: 1fr;
+  }
 
   li {
     list-style: none;
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 8fr 1fr;
+    gap:5px;
     background-color: white;
     padding: 20px;
     color: var(--black);
-    margin: 10px;
     flex-wrap: wrap;
     min-height: 100px;
     box-shadow: rgb(149 157 165 / 20%) 0px 8px 24px;
     border-radius: 10px;
-    @media screen and (min-width: 1592px) {
-      flex-basis: calc(33.3333% - 20px);
-    }
-    @media screen and (min-width: 700px) and (max-width: 1591px) {
-      flex-basis: calc(50% - 20px);
-    }
-    @media screen and (max-width: 699px) {
-      flex-basis: 100%;
-    }
   }
 }
 
 .todoItem {
-  flex-basis: 75%;
-  align-self: flex-start;
-
 
   &__title {
     margin: 0;
     padding-bottom: 5px;
     font-size: 20px;
     font-weight: 600;
+    max-width: 90%;
+    hyphens: auto;
   }
 
   &__desc {
@@ -80,25 +79,25 @@
   }
 
   &__icon {
-    width: 20px;
+    width: 1.5em;
     opacity: 0.5;
   }
 
   &__editIcon {
-    flex-basis: 10%;
     align-self: flex-start;
+    margin-left: auto;
   }
 
   &__deleteIcon {
     margin-left: auto;
     align-self: end;
-
+    grid-column: 3;
+    grid-row:3;
   }
 }
 
 .checkbox {
   position: relative;
-  flex-basis: 15%;
   align-self: flex-start;
   cursor: pointer;
 }
@@ -142,14 +141,11 @@
   opacity: 1;
 }
 
-
 .untilDate {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
   font-size: 14px;
-  margin: 10px 0;
-  flex-basis: 100%;
+  align-self: end;
+  grid-column: 2;
+  grid-row:3;
 
   > svg {
     margin-right: 4px;
