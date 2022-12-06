@@ -2,7 +2,6 @@ import {useCallback, useState} from "react";
 import clsx from "clsx";
 import styles from './TodoForm.module.scss'
 import Button from "../Button/Button";
-import attach from '../images/attachments-attach-svgrepo-com.svg'
 
 const initialValues = {name: '', desc: '', file: '', untilDate: ''}
 
@@ -19,7 +18,7 @@ export default function TodoForm(props) {
     return (
         <form className={styles.todoForm} onKeyPress={handleEnter}>
             <label className={styles.todoForm__labelText} htmlFor='name'>Add title</label>
-            <Input
+            <InputText
                 placeholder="Add title"
                 name="name"
                 values={values}
@@ -27,14 +26,15 @@ export default function TodoForm(props) {
                 error={props.error}
             />
             <label htmlFor="desc">Add description</label>
-            <Input
+            <InputText
                 placeholder="Add description"
                 name="desc"
                 values={values}
                 onChange={handleChange}
             />
             <label htmlFor="untilDate">End date:</label>
-            <Input
+            <input
+                className={clsx(props.error && styles.todoForm__placeholderError, styles.todoForm__textfield)}
                 name="untilDate"
                 type="datetime-local"
                 values={values}
@@ -46,20 +46,24 @@ export default function TodoForm(props) {
     )
 }
 
-function Input(props) {
+function InputText(props) {
     const {onChange, name, values, type} = props;
+    const [height, setHeight] = useState('')
     const handleChange = useCallback(e => {
         onChange({[name]: e.target.value})
+        const scrollHeight = e.target.scrollHeight
+        setHeight(scrollHeight)
     }, [name, onChange]);
 
     return (
-        <input
-            className={clsx(props.error && styles.todoForm__placeholderError, styles.todoForm__textfield)}
-            type={type || 'text'}
-            id={props.name}
-            value={values[name]}
-            onChange={handleChange}
-            placeholder={props.error || props.description}
+        <textarea className={clsx(props.error && styles.todoForm__placeholderError, styles.todoForm__textfield)}
+                  type='text'
+                  rows="1"
+                  style = {{height: height + 'px'}}
+                  id={props.name}
+                  value={values[name]}
+                  onChange={handleChange}
+                  placeholder={props.error || props.description}
         />
     )
 }

@@ -8,8 +8,6 @@ import Button from "../Button/Button";
 import {db} from "../firebase.js"
 import {collection, writeBatch, addDoc, doc, deleteDoc, onSnapshot, updateDoc, query, where} from "firebase/firestore";
 
-
-
 const tabs = [
     {text: 'All', filter: () => true},
     {text: 'Completed', filter: todo => todo.done},
@@ -118,9 +116,7 @@ export default function ToDoApp() {
             </Container>
         </div>
     )
-
 }
-
 
 function plural(num, single, multi) {
     return num === 1 ? single : multi
