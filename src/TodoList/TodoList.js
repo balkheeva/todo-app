@@ -55,15 +55,6 @@ function ListItem(props) {
                 type="button"
                 onClick={() => setModalOpen(!modalOpen)}><IconEdit className={styles.todoItem__icon}/>
             </button>
-            {todo.fileName &&
-                <a
-                    className={styles.todoItem__fileName}
-                    title="Open file in a new tab"
-                    href={`${API_PATH}/todos/files/${todo.id}`}
-                    target="_blank"
-                    rel="noreferrer">
-                    <img className={styles.todoItem__icon} src={attach}/>{todo.origName}
-                </a>}
             <UntilDate todo={todo}/>
 
             <button
