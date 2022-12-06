@@ -56,7 +56,11 @@ export default function ToDoApp() {
 
     const handleChangeBox = id => {
         const found = todos.find(i => i.id === id)
-        return handleEdit(id, { done: !found.done })
+        return handleEdit(id, {
+            done: !found.done,
+            completed: !found.done ? new Date().toISOString() : null,
+            updated: new Date().toISOString()
+        })
     };
 
     const handleDelete = (id) => {
