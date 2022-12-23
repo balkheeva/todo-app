@@ -54,28 +54,11 @@
     padding-bottom: 5px;
   }
 
-  &__fileName {
-    color: var(--black);
-    cursor: pointer;
-    font-size: 14px;
-    width: 200px;
-    word-break: break-all;
-    flex-basis: 100%;
-    white-space: nowrap;
-    margin: 10px 0;
-    overflow: hidden;
-    display: flex;
-
-    > img {
-      margin-right: 4px;
-      width: 14px;
-    }
-
-  }
 
   &__completed {
     text-decoration: line-through;
     opacity: 0.4;
+    transition: color .25s;
   }
 
   &__icon {
@@ -110,6 +93,7 @@
   width: 20px;
   height: 20px;
   padding: 6px;
+  margin-left: 0;
   border: 1px solid var(--black);
   border-radius: 50%;
   background-color: #fff;
@@ -123,7 +107,7 @@
   border-right: none;
   content: "";
   height: 6px;
-  left: 8px;
+  left: 5px;
   opacity: 0;
   position: absolute;
   top: 9px;
@@ -142,6 +126,7 @@
 }
 
 .untilDate {
+  display: flex;
   font-size: 14px;
   align-self: end;
   grid-column: 1/3;

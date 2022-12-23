@@ -37,8 +37,7 @@ export default function TodoForm(props) {
                 className={clsx(props.error && styles.todoForm__placeholderError, styles.todoForm__textfield)}
                 name="untilDate"
                 type="datetime-local"
-                values={values}
-                onChange={handleChange}
+                onChange={(e) => handleChange({untilDate: e.target.value})}
             />
 
             <Button onClick={handleSubmit} className={styles.btnLocation} type="button">Add</Button>
